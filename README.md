@@ -45,8 +45,16 @@
 ### 1. Persistencia BD (`brokerabierto.json`)
 Escucha todos los mensajes `ElectricFence/#` y los guarda automáticamente en la tabla `registro` de MySQL.
 
+Imagen de Broker o persistencia de BD
+<img width="837" height="350" alt="{CD2DC5AB-810A-4094-A941-8D8F040AA0D1}" src="https://github.com/user-attachments/assets/372e51ea-6ecf-4c5d-bb30-dae477e07cb9" />
+
+
 ### 2. Emisor (`emisorabierto.json`)
 Simulador por botones para activar/desactivar alarmas, estados y controles de cada zona del cerco. Incluye mapeo completo de rutas (R1, R2, R3, Switch) publicado como JSON enriquecido.
+
+<img width="851" height="497" alt="{BE2C5204-63E3-401F-AA4B-B24F190F94AD}" src="https://github.com/user-attachments/assets/c81adb97-1f0a-486d-9660-34450fe3a559" />
+
+
 
 ### 3. Receptor (`receptorabierto.json`)
 Resuelve los mensajes MQTT por dispositivo destino (Broker, Switch, R1-R4) y actualiza un dashboard profesional con:
@@ -55,6 +63,8 @@ Resuelve los mensajes MQTT por dispositivo destino (Broker, Switch, R1-R4) y act
 - Luces por zona: Estado (verde), Alarma (rojo), Control (azul)
 - Contadores y último evento
 - Botones Armar / Desalarmar
+  
+<img width="800" height="497" alt="{8802214F-62F2-4B8C-8CAB-5D760BFDB100}" src="https://github.com/user-attachments/assets/ed31dab7-43ce-4e49-a23e-6865fe065c99" />
 
 ## Requisitos
 
