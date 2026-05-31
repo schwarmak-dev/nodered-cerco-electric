@@ -1,0 +1,48 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: ef-mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+
+  mysql:
+    image: mysql:8
+    container_name: ef-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: monitor_cercos
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+
+  node-red:
+    build: .
+    container_name: ef-node-red
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+      - mysql
+    ports:
+      - "1880:1880"
+    environment:
+      TZ: America/Santiago
+    volumes:
+      - node_red_data:/data
+      - ./flows:/data/flows:ro
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:
+  mysql_data:
+  node_red_data:
