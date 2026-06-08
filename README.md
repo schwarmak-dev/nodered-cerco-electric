@@ -1,150 +1,124 @@
-# ElectricFence Node-RED — Cerco Eléctrico Inteligente
+# ⚡ ElectricFence Node-RED — Sistema Inteligente de Cerco Eléctrico
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+<div align="center">
 
-**ElectricFence Node-RED** es un sistema de monitoreo y control para cercos eléctricos basado en **Node-RED**, **MQTT** y **MySQL**. Diseñado para correr en **Docker** o en una **Raspberry Pi** con pines GPIO.
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![Node-RED](https://img.shields.io/badge/Node--RED-4.0.2-green.svg)
+![MQTT](https://img.shields.io/badge/MQTT-Mosquitto-orange.svg)
+![MySQL](https://img.shields.io/badge/MySQL-8.x-blue.svg)
+![Docker](https://img.shields.io/badge/Docker-Compose-purple.svg)
+![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-3%20unidades-red.svg)
 
-> Creado por [schwarmak-dev](https://github.com/schwarmak-dev) — si usas este proyecto, menciona la fuente original. Open source bajo licencia MIT.
+</div>
+
+<p align="center">
+  <strong>Sistema de monitoreo y control para cercos eléctricos con Node-RED, MQTT y MySQL</strong><br>
+  Diseñado para correr en Docker o en Raspberry Pi con pines GPIO
+</p>
 
 ---
 
-## Arquitectura
+## 🎯 ¿Qué es ElectricFence?
+
+**ElectricFence Node-RED** es una solución completa y escalable para el monitoreo y control de cercos eléctricos. Utiliza **3 Raspberry Pi** interconectadas vía MQTT para crear una red inteligente que:
+
+- ✅ Detecta intrusiones en **7 zonas** de cercos
+- ✅ Publica alarmas y estados en tiempo real
+- ✅ Controla relés para armado/desarmado remoto
+- ✅ Muestra un dashboard profesional con LEDs de estado
+- ✅ Registra eventos en MySQL para auditoría
+
+> **Creado por [schwarmak-dev](https://github.com/schwarmak-dev)** — Open source bajo licencia MIT.
+
+---
+
+## 🏗️ Arquitectura del Sistema
 
 ```
-┌─────────────────────────────────────────────────────────────────────┐
-│                         Docker Compose                              │
-│                                                                     │
-│  ┌──────────┐    MQTT     ┌──────────┐    SQL     ┌──────────┐     │
-│  │ Emisor   │◄──────────► │ Mosquitto│◄──────────► │  MySQL   │     │
-│  │ (simulador│  1883      │  Broker  │   3306     │  8.x     │     │
-│  │ o GPIO)  │            └────┬──────┘            └──────────┘     │
-│  └──────────┘                 │                                     │
-│                               │ MQTT                                │
-│                        ┌──────▼──────┐                             │
-│                        │  Node-RED   │   Dashboard                  │
-│                        │  4.0.2      │◄──── :1880/ui ───────────► │
-│                        │             │                              │
-│                        │ - Persistencia BD                          │
-│                        │ - Receptor / Resolver                      │
-│                        │ - Dashboard profesional                    │
-│                        └─────────────┘                             │
-└─────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────┐
+│                           SISTEMA ELECTRICFENCE                                  │
+│                                                                                 │
+│  ┌──────────────────┐        ┌──────────────────┐        ┌──────────────────┐   │
+│  │   REPEATER       │        │     BROKER       │        │       G1         │   │
+│  │  (.105)          │  MQTT  │     (.104)       │  MQTT  │     (.106)       │   │
+│  │                  │◄──────►│                  │◄──────►│                  │   │
+│  │ • 7 GPIO entrada │  1883  │ • Dashboard LED  │  1883  │ • Control relé   │   │
+│  │ • Detecta hebras │        │ • Alarma/Estado  │        │ • Armado/Desarm  │   │
+│  │ • Publica alarmas│        │ • Control ON/OFF │        │ • 2 relés GPIO   │   │
+│  └────────┬─────────┘        └────────┬─────────┘        └──────────────────┘   │
+│           │                           │                                         │
+│           │         ┌─────────────────┼─────────────────┐                       │
+│           │         │                 │                 │                       │
+│           ▼         ▼                 ▼                 ▼                       │
+│  ┌─────────────────────────────────────────────────────────────────────────┐   │
+│  │                         Docker Compose                                  │   │
+│  │                                                                         │   │
+│  │  ┌──────────┐    MQTT     ┌──────────┐    SQL     ┌──────────┐         │   │
+│  │  │ Mosquitto│◄──────────► │  MySQL   │            │ Node-RED │         │   │
+│  │  │ Broker   │   1883      │  8.x     │   3306     │  4.0.2   │         │   │
+│  │  └──────────┘             └──────────┘            └────┬─────┘         │   │
+│  │                                                        │               │   │
+│  │                                                ┌───────▼───────┐       │   │
+│  │                                                │  Dashboard UI │       │   │
+│  │                                                │  :1880/ui     │       │   │
+│  │                                                └───────────────┘       │   │
+│  └─────────────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Componentes
+---
 
-| Componente     | Tecnología         | Puerto |
-|----------------|--------------------|--------|
-| Node-RED       | nodered/node-red   | `1880` |
-| Mosquitto MQTT | eclipse-mosquitto  | `1883` |
-| MySQL          | mysql:8            | `3306` |
-| Dashboard UI   | node-red-dashboard | `1880/ui` |
+## 🛠️ Componentes del Sistema
 
-## Flujos incluidos
+| Componente | Tecnología | Puerto | Función |
+|------------|------------|--------|---------|
+| **Node-RED** | nodered/node-red 4.0.2 | `1880` | Motor de flujos y dashboard |
+| **Mosquitto MQTT** | eclipse-mosquitto 2 | `1883` | Broker de mensajería |
+| **MySQL** | mysql:8 | `3306` | Almacenamiento de registros |
+| **Dashboard UI** | node-red-dashboard | `1880/ui` | Interfaz gráfica de monitoreo |
 
-### 1. BROKER (`brokernuevo.json`)
-Raspberry BROKER (emisor .104): recibe señales físicas de cercos via GPIO, publica MQTT y muestra dashboard.
-- **Tab BROKER**: Suscribe a `inchalam/cercos/alarma/#` e `inchalam/cercos/estado/#`, activa GPIOs de salida (módulo relé 1 y 2).
-- **Tab ALARMAS**: Dashboard UI con LEDs de alarma y estado por zona.
-- **Tab CONTROL CERCOS**: Publica comandos ON/OFF hacia G1.
+---
 
-### 2. G1 (`g1.json`)
-Raspberry G1 (receptor .106): control ON/OFF de cercos via relé GPIO.
-- **Canal C1**: GPIO24 (Relé 1) — arma/desarma TODOS los cercos. Escucha `inchalam/cercos/onoff/#`.
-- **Canal C2**: GPIO25 (Relé 2) — arma/desarma solo Alambron. Escucha `inchalam/cercos/onoff/alambron/#`.
-- **Canal C3**: GPIO24 — activa al recibir CUALQUIER alarma de cerco (`inchalam/cercos/alarma/#`).
-- **Estados PGM**: Lee 7 GPIO de entrada (GPIO23,22,12,20,19,4,21) y publica estados de cercos por MQTT.
+## 📦 Flujos Incluidos
 
-### 3. REPEATER (`repeater_fixed.json`)
-Raspberry REPEATER (brokerm .105): repetidor de alarmas.
-- Lee 7 GPIO de entrada (hebras de cerco) y publica a `inchalam/cercos/alarma/...`.
-- Mapeo: IN1=GPIO17 (Puelche sup), IN2=GPIO18 (Puelche inf), IN3=GPIO10 (Estac. sup), IN4=GPIO9 (Estac. inf), IN5=GPIO11 (Desp. sup), IN6=GPIO22 (Desp. inf), IN7=GPIO27 (Alambron).
+### 1. 🔵 BROKER (`brokernuevo.json`)
 
-## Requisitos
+**Raspberry BROKER (IP: .104)** — El cerebro del sistema de monitoreo.
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/Mac) o Docker Engine (Linux)
-- Git (opcional, para clonar)
+| Tab | Función |
+|-----|---------|
+| **BROKER** | Suscribe a alarmas y estados, activa GPIOs de salida (módulo relé 1 y 2) |
+| **ALARMAS** | Dashboard UI con LEDs de alarma (rojo) y estado (verde) por zona |
+| **CONTROL CERCOS** | Publica comandos ON/OFF desde BROKER hacia G1 |
 
-## Inicio rápido
+**Zonas monitoreadas:**
+- 🏠 Puelche (superior/inferior)
+- 🚗 Estacionamiento (superior/inferior)
+- 📦 Despacho (superior/inferior)
+- ⚡ Alambron (único)
 
-```bash
-# Clonar
-git clone https://github.com/schwarmak-dev/nodered-cerco-electric.git
-cd nodered-cerco-electric
+---
 
-# Configurar credenciales (opcional)
-# Editar .env si se desea cambiar user/pass de MySQL
+### 2. 🟢 G1 (`g1.json`)
 
-# Levantar todo
-docker compose up -d --build
-```
+**Raspberry G1 (IP: .106)** — El ejecutor de comandos de control.
 
-### Configuración inicial (solo la primera vez)
+| Canal | GPIO | Función |
+|-------|------|---------|
+| **C1** | GPIO24 (Relé 1) | Arma/desarma **TODOS** los cercos |
+| **C2** | GPIO25 (Relé 2) | Arma/desarma solo **Alambron** |
+| **C3** | GPIO24 | Activa al recibir CUALQUIER alarma |
 
-1. Abrir `http://localhost:1880`
-2. Ir al tab **Persistencia BD**
-3. Hacer doble clic en el nodo `monitor_cercos` (MySQLdatabase)
-4. Ingresar:
-   - **User:** `monitor`
-   - **Password:** `monitorpass123`
-5. Click **Update** → **Deploy**
+**Características:**
+- Pulso de 500ms para activación de relés
+- Lee 7 estados PGM (GPIO23,22,12,20,19,4,21)
+- Publica estados de cercos por MQTT
 
-### Probar el simulador
+---
 
-1. Ir al tab **ElectricFence Emisor**
-2. Hacer clic en cualquier botón azul (ej: *Alarma Zona1 Sup ON*)
-3. Ver el dashboard en `http://localhost:1880/ui`
-4. Consultar los datos guardados:
+### 3. 🟠 REPEATER (`repeater_fixed.json`)
 
-```bash
-docker compose exec mysql mysql -u monitor -pmonitorpass123 monitor_cercos -e "SELECT * FROM registro"
-```
-
-## Estructura del proyecto
-
-```
-nodered-cerco-electric/
-├── docker-compose.yml       # Orquestación de servicios
-├── Dockerfile               # Imagen Node-RED personalizada
-├── .env                     # Variables de entorno (MySQL)
-├── docker/
-│   └── entrypoint.sh        # Script de entrada (combina flujos)
-├── flows/
-│   ├── brokernuevo.json     # BROKER — alarmas, estados GPIO, dashboard
-│   ├── g1.json              # G1 — control ON/OFF cercos via relé
-│   └── repeater_fixed.json  # REPEATER — repetidor de alarmas GPIO
-├── mosquitto/
-│   └── config/
-│       └── mosquitto.conf   # Configuración MQTT
-└── mysql/
-    └── init/
-        └── 01-schema.sql    # Tabla registro
-```
-
-## Dashboard
-
-El dashboard (Node-RED UI) en `http://localhost:1880/ui` ofrece:
-
-- **Estado del sistema**: Armado/Desarmado con indicador visual
-- **Alarmas activas**: Contador y luces rojas por zona
-- **Estado de cercos**: Luces verdes para estado encendido
-- **Controles**: Luces azules para controles activos
-- **Último evento**: Detalle del último mensaje recibido
-- **Botones**: Armar alarma / Desalarmar
-
-## GPIO en Raspberry Pi
-
-El sistema está diseñado para ejecutarse en **3 Raspberry Pi** conectadas vía MQTT:
-
-| Dispositivo | IP | Función |
-|-------------|-----|---------|
-| BROKER (.104) | 192.168.1.104 | Recibe señales físicas, publica MQTT, dashboard |
-| REPEATER (.105) | 192.168.1.105 | Repetidor de alarmas MQTT |
-| G1 (.106) | 192.168.1.106 | Control ON/OFF de cercos via relé |
-
-### Mapeo de GPIO
-
-**REPEATER (entrada — alarmas):**
+**Raspberry REPEATER (IP: .105)** — El detector de intrusiones.
 
 | Entrada | GPIO | Zona |
 |---------|------|------|
@@ -156,54 +130,312 @@ El sistema está diseñado para ejecutarse en **3 Raspberry Pi** conectadas vía
 | IN6 | GPIO22 | Despacho inferior |
 | IN7 | GPIO27 | Alambron |
 
-**BROKER (salida — alarmas y estados):**
-
-| Salida | GPIO | Función |
-|--------|------|---------|
-| Relé 1 IN1 | GPIO17 | Alarma Puelche superior |
-| Relé 1 IN2 | GPIO18 | Alarma Puelche inferior |
-| Relé 1 IN3 | GPIO10 | Alarma Estacionamiento superior |
-| Relé 1 IN4 | GPIO9 | Alarma Estacionamiento inferior |
-| Relé 1 IN5 | GPIO11 | Alarma Despacho superior |
-| Relé 1 IN6 | GPIO8 | Alarma Despacho inferior |
-| Relé 1 IN7 | GPIO7 | Alarma Alambron |
-| Relé 2 IN1 | GPIO23 | Estado Puelche superior |
-| Relé 2 IN2 | GPIO22 | Estado Puelche inferior |
-| Relé 2 IN3 | GPIO12 | Estado Estacionamiento superior |
-| Relé 2 IN4 | GPIO20 | Estado Estacionamiento inferior |
-| Relé 2 IN5 | GPIO19 | Estado Despacho superior |
-| Relé 2 IN6 | GPIO4 | Estado Despacho inferior |
-| Relé 2 IN7 | GPIO21 | Estado Alambron |
-
-**G1 (salida — control de cercos):**
-
-| Salida | GPIO | Función |
-|--------|------|---------|
-| Relé 1 | GPIO24 | Arma/desarma TODOS los cercos |
-| Relé 2 | GPIO25 | Arma/desarma solo Alambron |
-
-**G1 (entrada — estados PGM):**
-
-| Entrada | GPIO | Zona |
-|---------|------|------|
-| IN_STATE | GPIO23 | Puelche superior |
-| IN_STATE | GPIO22 | Puelche inferior |
-| IN_STATE | GPIO12 | Estacionamiento superior |
-| IN_STATE | GPIO20 | Estacionamiento inferior |
-| IN_STATE | GPIO19 | Despacho superior |
-| IN_STATE | GPIO4 | Despacho inferior |
-| IN_STATE | GPIO21 | Alambron |
-
-## Personalización
-
-- **Credenciales MySQL**: editar `.env`
-- **Puertos**: modificar `docker-compose.yml` si hay conflictos (ej: MySQL local en `3306`)
-- **Flujos**: los archivos `.json` en `flows/` se combinan automáticamente al arrancar el contenedor
-
-## Licencia
-
-MIT — ver archivo [LICENSE](LICENSE).
+**Características:**
+- Lee hebras de cerco físicas
+- Publica alarmas con payload JSON enriquecido
+- Origen: `repeater-rpi-publisher`
 
 ---
 
-**Schwarmak Dev** — [GitHub](https://github.com/schwarmak-dev)
+## 🚀 Inicio Rápido
+
+### Requisitos Previos
+
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (Windows/Mac) o Docker Engine (Linux)
+- Git (opcional, para clonar)
+- 3 Raspberry Pi con GPIO (para producción)
+
+### Instalación
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/schwarmak-dev/nodered-cerco-electric.git
+cd nodered-cerco-electric
+
+# 2. Configurar variables de entorno (opcional)
+# Crear archivo .env con:
+# MYSQL_ROOT_PASSWORD=tu_password_root
+# MYSQL_USER=monitor
+# MYSQL_PASSWORD=tu_password_monitor
+
+# 3. Levantar todo el sistema
+docker compose up -d --build
+```
+
+### Verificación
+
+1. Abrir **Node-RED Editor**: `http://localhost:1880`
+2. Abrir **Dashboard**: `http://localhost:1880/ui`
+3. Verificar que los 3 flujos estén cargados (BROKER, G1, REPEATER)
+
+### Configuración Inicial (Primera Vez)
+
+1. Ir al tab **BROKER** en Node-RED
+2. Hacer doble clic en el nodo `monitor_cercos` (MySQLdatabase)
+3. Configurar credenciales:
+   - **Host:** `mysql` (nombre del contenedor Docker)
+   - **User:** `monitor`
+   - **Password:** `monitorpass123`
+4. Click **Update** → **Deploy**
+
+---
+
+## 📊 Dashboard
+
+El dashboard profesional en `http://localhost:1880/ui` ofrece:
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    DASHBOARD ELECTRICFENCE                       │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌─────────────────────┐  ┌─────────────────────┐              │
+│  │   CERCO ALARMA      │  │   CERCO ESTADO      │              │
+│  │                     │  │                     │              │
+│  │  🔴 Puelche Sup     │  │  🟢 Puelche Sup     │              │
+│  │  🔴 Puelche Inf     │  │  🟢 Puelche Inf     │              │
+│  │  🔴 Estac. Sup      │  │  🟢 Estac. Sup      │              │
+│  │  🔴 Estac. Inf      │  │  🟢 Estac. Inf      │              │
+│  │  🔴 Desp. Sup       │  │  🟢 Desp. Sup       │              │
+│  │  🔴 Desp. Inf       │  │  🟢 Desp. Inf       │              │
+│  │  🔴 Alambron        │  │  🟢 Alambron        │              │
+│  └─────────────────────┘  └─────────────────────┘              │
+│                                                                 │
+│  📈 Último Evento: Alarma Puelche superior - 12:34:56          │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Características del Dashboard:**
+- ✅ LEDs de estado por zona (rojo = alarma, verde = encendido)
+- ✅ Conteo de alarmas activas
+- ✅ Registro del último evento recibido
+- ✅ Actualización en tiempo real
+
+---
+
+## 🗺️ Mapeo Completo de GPIO
+
+### Dispositivos y IPs
+
+| Dispositivo | IP | Función Principal |
+|-------------|-----|-------------------|
+| **REPEATER** | 192.168.1.105 | Detecta intrusiones, publica alarmas |
+| **BROKER** | 192.168.1.104 | Recibe datos, muestra dashboard, controla |
+| **G1** | 192.168.1.106 | Ejecuta comandos ON/OFF de cercos |
+
+### REPEATER — Entradas (Hebras de Cerco)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    REPEATER (.105)                           │
+│                                                             │
+│  IN1 ──► GPIO17 ──► Puelche Superior                       │
+│  IN2 ──► GPIO18 ──► Puelche Inferior                       │
+│  IN3 ──► GPIO10 ──► Estacionamiento Superior               │
+│  IN4 ──► GPIO9  ──► Estacionamiento Inferior               │
+│  IN5 ──► GPIO11 ──► Despacho Superior                      │
+│  IN6 ──► GPIO22 ──► Despacho Inferior                      │
+│  IN7 ──► GPIO27 ──► Alambron                               │
+│                                                             │
+│  intype: down — activa con 3.3V, reposo en GND             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### BROKER — Salidas (Módulos Relé)
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    BROKER (.104)                             │
+│                                                             │
+│  MÓDULO RELÉ 1 — ALARMAS                                   │
+│  ├── IN1 ──► GPIO17 ──► Alarma Puelche Superior            │
+│  ├── IN2 ──► GPIO18 ──► Alarma Puelche Inferior            │
+│  ├── IN3 ──► GPIO10 ──► Alarma Estacionamiento Superior    │
+│  ├── IN4 ──► GPIO9  ──► Alarma Estacionamiento Inferior    │
+│  ├── IN5 ──► GPIO11 ──► Alarma Despacho Superior           │
+│  ├── IN6 ──► GPIO8  ──► Alarma Despacho Inferior           │
+│  └── IN7 ──► GPIO7  ──► Alarma Alambron                    │
+│                                                             │
+│  MÓDULO RELÉ 2 — ESTADOS                                   │
+│  ├── IN1 ──► GPIO23 ──► Estado Puelche Superior            │
+│  ├── IN2 ──► GPIO22 ──► Estado Puelche Inferior            │
+│  ├── IN3 ──► GPIO12 ──► Estado Estacionamiento Superior    │
+│  ├── IN4 ──► GPIO20 ──► Estado Estacionamiento Inferior    │
+│  ├── IN5 ──► GPIO19 ──► Estado Despacho Superior           │
+│  ├── IN6 ──► GPIO4  ──► Estado Despacho Inferior           │
+│  └── IN7 ──► GPIO21 ──► Estado Alambron                    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### G1 — Control de Cercos
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    G1 (.106)                                 │
+│                                                             │
+│  SALIDAS (Control)                                          │
+│  ├── GPIO24 (Relé 1) ──► Arma/desarma TODOS los cercos     │
+│  └── GPIO25 (Relé 2) ──► Arma/desarma solo Alambron        │
+│                                                             │
+│  ENTRADAS (Estados PGM)                                     │
+│  ├── GPIO23 ──► Puelche Superior                            │
+│  ├── GPIO22 ──► Puelche Inferior                            │
+│  ├── GPIO12 ──► Estacionamiento Superior                    │
+│  ├── GPIO20 ──► Estacionamiento Inferior                    │
+│  ├── GPIO19 ──► Despacho Superior                           │
+│  ├── GPIO4  ──► Despacho Inferior                           │
+│  └── GPIO21 ──► Alambron                                    │
+│                                                             │
+│  Pulso: 500ms al recibir active:true                        │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📂 Estructura del Proyecto
+
+```
+nodered-cerco-electric/
+│
+├── 📄 docker-compose.yml       # Orquestación de servicios
+├── 📄 Dockerfile               # Imagen Node-RED personalizada
+├── 📄 .env                     # Variables de entorno (MySQL)
+├── 📄 LICENSE                  # Licencia MIT
+├── 📄 README.md                # Este archivo
+│
+├── 📁 docker/
+│   └── 📄 entrypoint.sh        # Script de entrada (combina flujos)
+│
+├── 📁 flows/                   # Flujos Node-RED
+│   ├── 📄 brokernuevo.json     # BROKER — alarmas, estados, dashboard
+│   ├── 📄 g1.json              # G1 — control ON/OFF cercos
+│   └── 📄 repeater_fixed.json  # REPEATER — repetidor de alarmas
+│
+├── 📁 mosquitto/
+│   └── 📁 config/
+│       └── 📄 mosquitto.conf   # Configuración MQTT
+│
+└── 📁 mysql/
+    └── 📁 init/
+        └── 📄 01-schema.sql    # Tabla registro
+```
+
+---
+
+## 🔧 Personalización
+
+### Cambiar Credenciales MySQL
+
+Crear archivo `.env` en la raíz del proyecto:
+
+```env
+MYSQL_ROOT_PASSWORD=tu_password_root_seguro
+MYSQL_USER=monitor
+MYSQL_PASSWORD=tu_password_monitor_seguro
+```
+
+### Cambiar Puertos
+
+Editar `docker-compose.yml`:
+
+```yaml
+services:
+  mosquitto:
+    ports:
+      - "1884:1883"  # Cambiar 1883 a 1884
+  mysql:
+    ports:
+      - "3307:3306"  # Cambiar 3306 a 3307
+  node-red:
+    ports:
+      - "1881:1880"  # Cambiar 1880 a 1881
+```
+
+### Agregar Nuevas Zonas
+
+1. Editar el flujo correspondiente (BROKER, G1 o REPEATER)
+2. Agregar nodos MQTT con el topic: `inchalam/cercos/alarma/{zona}/{subzona}`
+3. Conectar a GPIO disponible en el módulo relé
+4. Deploy y reiniciar contenedor
+
+---
+
+## 🐛 Solución de Problemas
+
+| Problema | Solución |
+|----------|----------|
+| Node-RED no carga los flujos | Verificar que los JSON estén en `flows/` y reiniciar contenedor |
+| MySQL no conecta | Verificar credenciales en `.env` y que el contenedor esté corriendo |
+| MQTT no recibe mensajes | Verificar configuración de Mosquitto y IPs de los dispositivos |
+| GPIO no responde | Verificar permisos y que los módulos relé estén conectados |
+
+---
+
+## 📝 Topics MQTT
+
+```
+inchalam/cercos/alarma/{zona}/{subzona}     # Alarmas de cerco
+inchalam/cercos/estado/{zona}/{subzona}     # Estados de cerco
+inchalam/cercos/onoff/#                      # Comandos ON/OFF
+inchalam/cercos/onoff/alambron/#             # Control solo Alambron
+```
+
+**Ejemplo de payload:**
+```json
+{
+  "topic": "inchalam/cercos/alarma/puelche/superior",
+  "active": true,
+  "value": 1,
+  "description": "Alarma cerco Puelche superior",
+  "origin": "repeater-rpi-publisher",
+  "timestamp": "2026-06-08T12:34:56.789Z"
+}
+```
+
+---
+
+## 🤝 Contribuir
+
+Las contribuciones son bienvenidas. Por favor:
+
+1. Forke el repositorio
+2. Cree una rama para su feature (`git checkout -b feature/nueva-zona`)
+3. Commit sus cambios (`git commit -m 'Agregar nueva zona de cerco'`)
+4. Push a la rama (`git push origin feature/nueva-zona`)
+5. Abra un Pull Request
+
+---
+
+## 📄 Licencia
+
+Este proyecto está bajo la Licencia MIT. Consulte el archivo [LICENSE](LICENSE) para más detalles.
+
+---
+
+## 🙏 Agradecimientos
+
+- **[schwarmak-dev](https://github.com/schwarmak-dev)** — Creador original del proyecto
+- **Node-RED** — Plataforma de programación visual para IoT
+- **Eclipse Mosquitto** — Broker MQTT ligero y confiable
+- **Docker** — Plataforma de contenedores para despliegue sencillo
+
+---
+
+## 📞 Soporte
+
+Si tiene preguntas o problemas:
+
+- 📧 Abra un [issue](https://github.com/schwarmak-dev/nodered-cerco-electric/issues) en GitHub
+- 💬 Contacte al creador: [schwarmak-dev](https://github.com/schwarmak-dev)
+
+---
+
+<div align="center">
+
+**Hecho con ❤️ para la comunidad de IoT y seguridad perimetral**
+
+![GitHub Stars](https://img.shields.io/github/stars/schwarmak-dev/nodered-cerco-electric?style=social)
+![GitHub Forks](https://img.shields.io/github/forks/schwarmak-dev/nodered-cerco-electric?style=social)
+
+</div>
