@@ -1,0 +1,520 @@
+[
+  {
+    "id": "f54970ac56224d17",
+    "type": "tab",
+    "label": "REPEATER",
+    "disabled": false,
+    "info": "Raspberry REPEATER (brokerm .105) — Repetidor de alarmas.\nLee 7 GPIO de entrada (hebras de cerco).\nPublica a inchalam/cercos/alarma/...\nGPIO: IN1=17, IN2=18, IN3=10, IN4=9, IN5=11, IN6=8, IN7=7\nintype: down — activa con 3.3V, reposo en GND."
+  },
+  {
+    "id": "88d74b0e0d334962",
+    "type": "MySQLdatabase",
+    "name": "monitor_cercos",
+    "host": "localhost",
+    "port": "3306",
+    "db": "monitor_cercos",
+    "tz": "America/Santiago",
+    "charset": ""
+  },
+  {
+    "id": "e0e728151d27563f",
+    "type": "mqtt-broker",
+    "name": "Mosquitto Inchalam",
+    "broker": "192.168.1.105",
+    "port": 1883,
+    "clientid": "",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": 4,
+    "keepalive": 60,
+    "cleansession": true,
+    "autoUnsubscribe": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthRetain": "false",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closeRetain": "false",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willRetain": "false",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": ""
+  },
+  {
+    "id": "mqttcfg_repeater",
+    "type": "mqtt-broker",
+    "name": "Mosquitto Inchalam",
+    "broker": "192.168.1.105",
+    "port": "1883",
+    "clientid": "repeater-rpi-publisher",
+    "autoConnect": true,
+    "usetls": false,
+    "protocolVersion": "4",
+    "keepalive": "60",
+    "cleansession": true,
+    "autoUnsubscribe": true,
+    "birthTopic": "",
+    "birthQos": "0",
+    "birthRetain": "false",
+    "birthPayload": "",
+    "birthMsg": {},
+    "closeTopic": "",
+    "closeQos": "0",
+    "closeRetain": "false",
+    "closePayload": "",
+    "closeMsg": {},
+    "willTopic": "",
+    "willQos": "0",
+    "willRetain": "false",
+    "willPayload": "",
+    "willMsg": {},
+    "userProps": "",
+    "sessionExpiry": ""
+  },
+  {
+    "id": "4b65812362ddc63f",
+    "type": "comment",
+    "z": "f54970ac56224d17",
+    "name": "── 7 Pulsadores ON/OFF del tablero → publica MQTT inchalam/cercos/onoff/# ──",
+    "info": "Cada pulsador físico activa con 3.3V (intype:down).\nPublica active:true al presionar, active:false al soltar.",
+    "x": 250,
+    "y": 40,
+    "wires": []
+  },
+  {
+    "id": "da13dce675632c25",
+    "type": "link in",
+    "z": "f54970ac56224d17",
+    "name": "Entradas pulsadores",
+    "links": [
+      "7b612c0227b66891",
+      "7db4c7fcb99e66f6",
+      "423d6fc9823046b7",
+      "5e0a4572101c2db3",
+      "53ccb759e336fcc2",
+      "99199b7d4548c9c0",
+      "9853d3bc2f192ad0"
+    ],
+    "x": 80,
+    "y": 700,
+    "wires": [
+      [
+        "031a377dddc3d4b7"
+      ]
+    ]
+  },
+  {
+    "id": "031a377dddc3d4b7",
+    "type": "function",
+    "z": "f54970ac56224d17",
+    "name": "Preparar payload MQTT",
+    "func": "const active = (msg.payload === 1 || msg.payload === \"1\" || msg.payload === true);\nmsg.topic   = msg.gpioTopic;\nmsg.retain  = false;\nmsg.qos     = 1;\nmsg.payload = JSON.stringify({\n    topic:       msg.gpioTopic,\n    active,\n    value:       active ? 1 : 0,\n    description: msg.gpioDesc,\n    origin:      'repeater-rpi-publisher',\n    timestamp:   new Date().toISOString()\n});\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 280,
+    "y": 700,
+    "wires": [
+      [
+        "8c04dca9d2775143",
+        "12c1146f1fadef32"
+      ]
+    ]
+  },
+  {
+    "id": "8c04dca9d2775143",
+    "type": "mqtt out",
+    "z": "f54970ac56224d17",
+    "name": "Publicar → Mosquitto",
+    "topic": "",
+    "qos": "",
+    "retain": "",
+    "broker": "mqttcfg_repeater",
+    "x": 500,
+    "y": 680,
+    "wires": []
+  },
+  {
+    "id": "12c1146f1fadef32",
+    "type": "debug",
+    "z": "f54970ac56224d17",
+    "name": "Debug publicación",
+    "active": true,
+    "tosidebar": true,
+    "console": false,
+    "tostatus": true,
+    "complete": "topic",
+    "targetType": "msg",
+    "x": 500,
+    "y": 740,
+    "wires": []
+  },
+  {
+    "id": "3d60236b2747c335",
+    "type": "rpi-gpio in",
+    "z": "f54970ac56224d17",
+    "name": "IN1 GPIO17 — Alarma cerco Puelche superior",
+    "pin": "17",
+    "intype": "down",
+    "debounce": "25",
+    "read": true,
+    "bcm": true,
+    "x": 160,
+    "y": 100,
+    "wires": [
+      [
+        "659684453fd98fee"
+      ]
+    ]
+  },
+  {
+    "id": "659684453fd98fee",
+    "type": "function",
+    "z": "f54970ac56224d17",
+    "name": "",
+    "func": "msg.gpioTopic = 'inchalam/cercos/alarma/puelche/superior';\nmsg.gpioDesc  = 'Alarma cerco Puelche superior';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 100,
+    "wires": [
+      [
+        "7b612c0227b66891"
+      ]
+    ]
+  },
+  {
+    "id": "7b612c0227b66891",
+    "type": "link out",
+    "z": "f54970ac56224d17",
+    "name": "→ pub IN1",
+    "mode": "link",
+    "links": [
+      "da13dce675632c25"
+    ],
+    "x": 540,
+    "y": 100,
+    "wires": []
+  },
+  {
+    "id": "6826d45fbd8b1050",
+    "type": "rpi-gpio in",
+    "z": "f54970ac56224d17",
+    "name": "IN2 GPIO18 — Alarma cerco Puelche inferior",
+    "pin": "18",
+    "intype": "down",
+    "debounce": "25",
+    "read": true,
+    "bcm": true,
+    "x": 160,
+    "y": 160,
+    "wires": [
+      [
+        "095e4d9ec7aa1788"
+      ]
+    ]
+  },
+  {
+    "id": "095e4d9ec7aa1788",
+    "type": "function",
+    "z": "f54970ac56224d17",
+    "name": "",
+    "func": "msg.gpioTopic = 'inchalam/cercos/alarma/puelche/inferior';\nmsg.gpioDesc  = 'Alarma cerco Puelche inferior';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 160,
+    "wires": [
+      [
+        "7db4c7fcb99e66f6"
+      ]
+    ]
+  },
+  {
+    "id": "7db4c7fcb99e66f6",
+    "type": "link out",
+    "z": "f54970ac56224d17",
+    "name": "→ pub IN2",
+    "mode": "link",
+    "links": [
+      "da13dce675632c25"
+    ],
+    "x": 540,
+    "y": 160,
+    "wires": []
+  },
+  {
+    "id": "e9602e75beb6c58a",
+    "type": "rpi-gpio in",
+    "z": "f54970ac56224d17",
+    "name": "IN3 GPIO10 — Alarma cerco Estacionamiento superior",
+    "pin": "10",
+    "intype": "down",
+    "debounce": "25",
+    "read": true,
+    "bcm": true,
+    "x": 160,
+    "y": 220,
+    "wires": [
+      [
+        "501074b65e9df7dd"
+      ]
+    ]
+  },
+  {
+    "id": "501074b65e9df7dd",
+    "type": "function",
+    "z": "f54970ac56224d17",
+    "name": "",
+    "func": "msg.gpioTopic = 'inchalam/cercos/alarma/estacionamiento/superior';\nmsg.gpioDesc  = 'Alarma cerco Estacionamiento superior';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 220,
+    "wires": [
+      [
+        "423d6fc9823046b7"
+      ]
+    ]
+  },
+  {
+    "id": "423d6fc9823046b7",
+    "type": "link out",
+    "z": "f54970ac56224d17",
+    "name": "→ pub IN3",
+    "mode": "link",
+    "links": [
+      "da13dce675632c25"
+    ],
+    "x": 540,
+    "y": 220,
+    "wires": []
+  },
+  {
+    "id": "0fe62b174bb36796",
+    "type": "rpi-gpio in",
+    "z": "f54970ac56224d17",
+    "name": "IN4 GPIO9 — Alarma cerco Estacionamiento inferior",
+    "pin": "9",
+    "intype": "down",
+    "debounce": "25",
+    "read": true,
+    "bcm": true,
+    "x": 160,
+    "y": 280,
+    "wires": [
+      [
+        "1d1268b584f18116"
+      ]
+    ]
+  },
+  {
+    "id": "1d1268b584f18116",
+    "type": "function",
+    "z": "f54970ac56224d17",
+    "name": "",
+    "func": "msg.gpioTopic = 'inchalam/cercos/alarma/estacionamiento/inferior';\nmsg.gpioDesc  = 'Alarma cerco Estacionamiento inferior';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 280,
+    "wires": [
+      [
+        "5e0a4572101c2db3"
+      ]
+    ]
+  },
+  {
+    "id": "5e0a4572101c2db3",
+    "type": "link out",
+    "z": "f54970ac56224d17",
+    "name": "→ pub IN4",
+    "mode": "link",
+    "links": [
+      "da13dce675632c25"
+    ],
+    "x": 540,
+    "y": 280,
+    "wires": []
+  },
+  {
+    "id": "821395cba06798d3",
+    "type": "rpi-gpio in",
+    "z": "f54970ac56224d17",
+    "name": "IN5 GPIO11 — Alarma cerco Despacho superior",
+    "pin": "11",
+    "intype": "down",
+    "debounce": "25",
+    "read": true,
+    "bcm": true,
+    "x": 160,
+    "y": 340,
+    "wires": [
+      [
+        "014d80a3ebe80a1e"
+      ]
+    ]
+  },
+  {
+    "id": "014d80a3ebe80a1e",
+    "type": "function",
+    "z": "f54970ac56224d17",
+    "name": "",
+    "func": "msg.gpioTopic = 'inchalam/cercos/alarma/despacho/superior';\nmsg.gpioDesc  = 'Alarma cerco Despacho superior';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 340,
+    "wires": [
+      [
+        "53ccb759e336fcc2"
+      ]
+    ]
+  },
+  {
+    "id": "53ccb759e336fcc2",
+    "type": "link out",
+    "z": "f54970ac56224d17",
+    "name": "→ pub IN5",
+    "mode": "link",
+    "links": [
+      "da13dce675632c25"
+    ],
+    "x": 540,
+    "y": 340,
+    "wires": []
+  },
+  {
+    "id": "d1d015a2715ad4dc",
+    "type": "rpi-gpio in",
+    "z": "f54970ac56224d17",
+    "name": "IN6 GPIO22 — Alarma cerco Despacho inferior",
+    "pin": "22",
+    "intype": "down",
+    "debounce": "25",
+    "read": true,
+    "bcm": true,
+    "x": 160,
+    "y": 400,
+    "wires": [
+      [
+        "fdf0e2fb513cf7d1"
+      ]
+    ]
+  },
+  {
+    "id": "fdf0e2fb513cf7d1",
+    "type": "function",
+    "z": "f54970ac56224d17",
+    "name": "",
+    "func": "msg.gpioTopic = 'inchalam/cercos/alarma/despacho/inferior';\nmsg.gpioDesc  = 'Alarma cerco Despacho inferior';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 400,
+    "wires": [
+      [
+        "99199b7d4548c9c0"
+      ]
+    ]
+  },
+  {
+    "id": "99199b7d4548c9c0",
+    "type": "link out",
+    "z": "f54970ac56224d17",
+    "name": "→ pub IN6",
+    "mode": "link",
+    "links": [
+      "da13dce675632c25"
+    ],
+    "x": 540,
+    "y": 400,
+    "wires": []
+  },
+  {
+    "id": "ce191e3e22f31915",
+    "type": "rpi-gpio in",
+    "z": "f54970ac56224d17",
+    "name": "IN7 GPIO27 — Alarma cerco Alambron",
+    "pin": "27",
+    "intype": "down",
+    "debounce": "25",
+    "read": true,
+    "bcm": true,
+    "x": 160,
+    "y": 460,
+    "wires": [
+      [
+        "0e9e6a116e9ffb25"
+      ]
+    ]
+  },
+  {
+    "id": "0e9e6a116e9ffb25",
+    "type": "function",
+    "z": "f54970ac56224d17",
+    "name": "",
+    "func": "msg.gpioTopic = 'inchalam/cercos/alarma/alambron/unico';\nmsg.gpioDesc  = 'Alarma cerco Alambron';\nreturn msg;",
+    "outputs": 1,
+    "noerr": 0,
+    "initialize": "",
+    "finalize": "",
+    "libs": [],
+    "x": 370,
+    "y": 460,
+    "wires": [
+      [
+        "9853d3bc2f192ad0"
+      ]
+    ]
+  },
+  {
+    "id": "9853d3bc2f192ad0",
+    "type": "link out",
+    "z": "f54970ac56224d17",
+    "name": "→ pub IN7",
+    "mode": "link",
+    "links": [
+      "da13dce675632c25"
+    ],
+    "x": 540,
+    "y": 460,
+    "wires": []
+  },
+  {
+    "id": "787655778fe1ecd6",
+    "type": "global-config",
+    "env": [],
+    "modules": {
+      "node-red-node-mysql": "3.0.0",
+      "node-red-node-pi-gpio": "2.0.7"
+    }
+  }
+]

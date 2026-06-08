@@ -1,0 +1,844 @@
+[
+    {
+        "id": "85619254656ffc76",
+        "type": "tab",
+        "label": "G1",
+        "disabled": false,
+        "info": "Raspberry G1 (receptorm .106) — Control ON/OFF de cercos via relé.\nGPIO24 (Relé 1): arma/desarma TODOS los cercos.\n  Escucha: inchalam/cercos/onoff/#\n  También: inchalam/cercos/alarma/# (Canal C3)\nGPIO25 (Relé 2): arma/desarma solo Alambron.\n  Escucha: inchalam/cercos/onoff/alambron/#\nPulso de 500ms al recibir active:true."
+    },
+    {
+        "id": "0000000000000001",
+        "type": "mqtt-broker",
+        "name": "Mosquitto Inchalam",
+        "broker": "192.168.1.105",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "15",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "0000000000002001",
+        "type": "ui_tab",
+        "name": "Inchalam",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "0000000000002002",
+        "type": "ui_group",
+        "name": "Panel de Cercos",
+        "tab": "0000000000002001",
+        "order": 1,
+        "disp": true,
+        "width": "24",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "9dd7940d49374a2c",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "mqttcfg_g1",
+        "type": "mqtt-broker",
+        "name": "Mosquitto Inchalam",
+        "broker": "192.168.1.105",
+        "port": "1883",
+        "clientid": "g1-rpi-controller",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "bf99d9020a3e2288",
+        "type": "rpi-gpio out",
+        "z": "85619254656ffc76",
+        "name": "Relé 1 GPIO24 — arma/desarma todos cercos",
+        "pin": "24",
+        "set": "",
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 700,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "cd1b994fbf336f62",
+        "type": "rpi-gpio out",
+        "z": "85619254656ffc76",
+        "name": "Relé 2 GPIO25 — arma/desarma Alambron",
+        "pin": "25",
+        "set": "",
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 700,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "35af657101b7d6b5",
+        "type": "comment",
+        "z": "85619254656ffc76",
+        "name": "Canal C1 — GPIO24 / Relé 1 → arma/desarma todos los cercos",
+        "info": "",
+        "x": 220,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "ee15634d2e80bc65",
+        "type": "mqtt in",
+        "z": "85619254656ffc76",
+        "name": "Comandos ON/OFF todos los cercos",
+        "topic": "inchalam/cercos/onoff/#",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_g1",
+        "nl": false,
+        "rap": false,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 120,
+        "wires": [
+            [
+                "a5780aaed48494f0"
+            ]
+        ]
+    },
+    {
+        "id": "a5780aaed48494f0",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Pulso 500ms → Relé 1 GPIO24 (todos los cercos)",
+        "func": "let payload = msg.payload;\nif (typeof payload === 'string') {\n    try { payload = JSON.parse(payload); } catch(e) {}\n}\nconst active = (payload !== null && typeof payload === 'object')\n    ? !!payload.active\n    : (payload === 1 || payload === true);\nif (!active) return null;\nnode.send({ payload: 1 });\nsetTimeout(() => node.send({ payload: 0 }), 500);\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 120,
+        "wires": [
+            [
+                "bf99d9020a3e2288",
+                "7bb8fa0d2afc0ed3"
+            ]
+        ]
+    },
+    {
+        "id": "7bb8fa0d2afc0ed3",
+        "type": "debug",
+        "z": "85619254656ffc76",
+        "name": "Debug C1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 700,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "ce035a8c4c9bb081",
+        "type": "comment",
+        "z": "85619254656ffc76",
+        "name": "Canal C2 — GPIO25 / Relé 2 → arma/desarma solo Alambron",
+        "info": "",
+        "x": 220,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "f5e7e725d1401e66",
+        "type": "mqtt in",
+        "z": "85619254656ffc76",
+        "name": "Comandos ON/OFF Alambron",
+        "topic": "inchalam/cercos/onoff/alambron/#",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_g1",
+        "nl": false,
+        "rap": false,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 360,
+        "wires": [
+            [
+                "c8fad2a8e9a503f1"
+            ]
+        ]
+    },
+    {
+        "id": "c8fad2a8e9a503f1",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Pulso 500ms → Relé 2 GPIO25 (Alambron)",
+        "func": "let payload = msg.payload;\nif (typeof payload === 'string') {\n    try { payload = JSON.parse(payload); } catch(e) {}\n}\nconst active = (payload !== null && typeof payload === 'object')\n    ? !!payload.active\n    : (payload === 1 || payload === true);\nif (!active) return null;\nnode.send({ payload: 1 });\nsetTimeout(() => node.send({ payload: 0 }), 500);\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 360,
+        "wires": [
+            [
+                "cd1b994fbf336f62",
+                "62fde0c6ef8a283a"
+            ]
+        ]
+    },
+    {
+        "id": "62fde0c6ef8a283a",
+        "type": "debug",
+        "z": "85619254656ffc76",
+        "name": "Debug C2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 700,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "711de2463bb7f11b",
+        "type": "comment",
+        "z": "85619254656ffc76",
+        "name": "Canal C3 — GPIO24 / Relé 1 → activa al recibir CUALQUIER alarma de cerco",
+        "info": "Escucha inchalam/cercos/alarma/# (publicado por REPEATER).\nCuando active:true → pulso 500ms en GPIO24 (mismo relé que C1).",
+        "x": 230,
+        "y": 500,
+        "wires": []
+    },
+    {
+        "id": "1208851b336eb840",
+        "type": "mqtt in",
+        "z": "85619254656ffc76",
+        "name": "Alarmas de cercos (REPEATER)",
+        "topic": "inchalam/cercos/alarma/#",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_g1",
+        "nl": false,
+        "rap": false,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 560,
+        "wires": [
+            [
+                "5187f40ccfebca82"
+            ]
+        ]
+    },
+    {
+        "id": "5187f40ccfebca82",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Relé 1 GPIO24 — Activo mientras suene la alarma",
+        "func": "let payload = msg.payload;\nif (typeof payload === 'string') {\n    try { payload = JSON.parse(payload); } catch(e) {}\n}\nconst active = (payload !== null && typeof payload === 'object')\n    ? !!payload.active\n    : (payload === 1 || payload === true);\nnode.send({ payload: active ? 1 : 0 });\nreturn null;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 560,
+        "wires": [
+            [
+                "bf99d9020a3e2288",
+                "276b303d57be58d5"
+            ]
+        ]
+    },
+    {
+        "id": "276b303d57be58d5",
+        "type": "debug",
+        "z": "85619254656ffc76",
+        "name": "Debug C3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 700,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "d827526f45884b69",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6",
+            "node-red-node-pi-gpio": "2.0.7"
+        }
+    },
+    {
+        "id": "g1_in_state_0",
+        "type": "rpi-gpio in",
+        "z": "85619254656ffc76",
+        "name": "IN_STATE GPIO23 — PGM Puelche superior",
+        "pin": "23",
+        "intype": "down",
+        "debounce": "25",
+        "read": true,
+        "bcm": true,
+        "x": 120,
+        "y": 700,
+        "wires": [
+            [
+                "g1_fn_state_0"
+            ]
+        ]
+    },
+    {
+        "id": "g1_fn_state_0",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Topic Puelche superior",
+        "func": "msg.gpioTopic = 'inchalam/cercos/estado/puelche/superior';\nmsg.gpioDesc  = 'Estado cerco Puelche superior';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 700,
+        "wires": [
+            [
+                "g1_link_out_0"
+            ]
+        ]
+    },
+    {
+        "id": "g1_link_out_0",
+        "type": "link out",
+        "z": "85619254656ffc76",
+        "name": "→ state Puelche sup",
+        "mode": "link",
+        "links": [
+            "g1_link_in_state"
+        ],
+        "x": 500,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "g1_in_state_1",
+        "type": "rpi-gpio in",
+        "z": "85619254656ffc76",
+        "name": "IN_STATE GPIO22 — PGM Puelche inferior",
+        "pin": "22",
+        "intype": "down",
+        "debounce": "25",
+        "read": true,
+        "bcm": true,
+        "x": 120,
+        "y": 760,
+        "wires": [
+            [
+                "g1_fn_state_1"
+            ]
+        ]
+    },
+    {
+        "id": "g1_fn_state_1",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Topic Puelche inferior",
+        "func": "msg.gpioTopic = 'inchalam/cercos/estado/puelche/inferior';\nmsg.gpioDesc  = 'Estado cerco Puelche inferior';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 760,
+        "wires": [
+            [
+                "g1_link_out_1"
+            ]
+        ]
+    },
+    {
+        "id": "g1_link_out_1",
+        "type": "link out",
+        "z": "85619254656ffc76",
+        "name": "→ state Puelche inf",
+        "mode": "link",
+        "links": [
+            "g1_link_in_state"
+        ],
+        "x": 500,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "g1_in_state_2",
+        "type": "rpi-gpio in",
+        "z": "85619254656ffc76",
+        "name": "IN_STATE GPIO12 — PGM Estacionamiento superior",
+        "pin": "12",
+        "intype": "down",
+        "debounce": "25",
+        "read": true,
+        "bcm": true,
+        "x": 120,
+        "y": 820,
+        "wires": [
+            [
+                "g1_fn_state_2"
+            ]
+        ]
+    },
+    {
+        "id": "g1_fn_state_2",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Topic Estacionamiento superior",
+        "func": "msg.gpioTopic = 'inchalam/cercos/estado/estacionamiento/superior';\nmsg.gpioDesc  = 'Estado cerco Estacionamiento superior';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 820,
+        "wires": [
+            [
+                "g1_link_out_2"
+            ]
+        ]
+    },
+    {
+        "id": "g1_link_out_2",
+        "type": "link out",
+        "z": "85619254656ffc76",
+        "name": "→ state Estac sup",
+        "mode": "link",
+        "links": [
+            "g1_link_in_state"
+        ],
+        "x": 500,
+        "y": 820,
+        "wires": []
+    },
+    {
+        "id": "g1_in_state_3",
+        "type": "rpi-gpio in",
+        "z": "85619254656ffc76",
+        "name": "IN_STATE GPIO20 — PGM Estacionamiento inferior",
+        "pin": "20",
+        "intype": "down",
+        "debounce": "25",
+        "read": true,
+        "bcm": true,
+        "x": 120,
+        "y": 880,
+        "wires": [
+            [
+                "g1_fn_state_3"
+            ]
+        ]
+    },
+    {
+        "id": "g1_fn_state_3",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Topic Estacionamiento inferior",
+        "func": "msg.gpioTopic = 'inchalam/cercos/estado/estacionamiento/inferior';\nmsg.gpioDesc  = 'Estado cerco Estacionamiento inferior';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 880,
+        "wires": [
+            [
+                "g1_link_out_3"
+            ]
+        ]
+    },
+    {
+        "id": "g1_link_out_3",
+        "type": "link out",
+        "z": "85619254656ffc76",
+        "name": "→ state Estac inf",
+        "mode": "link",
+        "links": [
+            "g1_link_in_state"
+        ],
+        "x": 500,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "g1_in_state_4",
+        "type": "rpi-gpio in",
+        "z": "85619254656ffc76",
+        "name": "IN_STATE GPIO19 — PGM Despacho superior",
+        "pin": "19",
+        "intype": "down",
+        "debounce": "25",
+        "read": true,
+        "bcm": true,
+        "x": 120,
+        "y": 940,
+        "wires": [
+            [
+                "g1_fn_state_4"
+            ]
+        ]
+    },
+    {
+        "id": "g1_fn_state_4",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Topic Despacho superior",
+        "func": "msg.gpioTopic = 'inchalam/cercos/estado/despacho/superior';\nmsg.gpioDesc  = 'Estado cerco Despacho superior';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 940,
+        "wires": [
+            [
+                "g1_link_out_4"
+            ]
+        ]
+    },
+    {
+        "id": "g1_link_out_4",
+        "type": "link out",
+        "z": "85619254656ffc76",
+        "name": "→ state Despacho sup",
+        "mode": "link",
+        "links": [
+            "g1_link_in_state"
+        ],
+        "x": 500,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "g1_in_state_5",
+        "type": "rpi-gpio in",
+        "z": "85619254656ffc76",
+        "name": "IN_STATE GPIO4 — PGM Despacho inferior",
+        "pin": "4",
+        "intype": "down",
+        "debounce": "25",
+        "read": true,
+        "bcm": true,
+        "x": 120,
+        "y": 1000,
+        "wires": [
+            [
+                "g1_fn_state_5"
+            ]
+        ]
+    },
+    {
+        "id": "g1_fn_state_5",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Topic Despacho inferior",
+        "func": "msg.gpioTopic = 'inchalam/cercos/estado/despacho/inferior';\nmsg.gpioDesc  = 'Estado cerco Despacho inferior';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1000,
+        "wires": [
+            [
+                "g1_link_out_5"
+            ]
+        ]
+    },
+    {
+        "id": "g1_link_out_5",
+        "type": "link out",
+        "z": "85619254656ffc76",
+        "name": "→ state Despacho inf",
+        "mode": "link",
+        "links": [
+            "g1_link_in_state"
+        ],
+        "x": 500,
+        "y": 1000,
+        "wires": []
+    },
+    {
+        "id": "g1_in_state_6",
+        "type": "rpi-gpio in",
+        "z": "85619254656ffc76",
+        "name": "IN_STATE GPIO21 — PGM Alambron",
+        "pin": "21",
+        "intype": "down",
+        "debounce": "25",
+        "read": true,
+        "bcm": true,
+        "x": 120,
+        "y": 1060,
+        "wires": [
+            [
+                "g1_fn_state_6"
+            ]
+        ]
+    },
+    {
+        "id": "g1_fn_state_6",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Topic Alambron",
+        "func": "msg.gpioTopic = 'inchalam/cercos/estado/alambron/unico';\nmsg.gpioDesc  = 'Estado cerco Alambron';\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 1060,
+        "wires": [
+            [
+                "g1_link_out_6"
+            ]
+        ]
+    },
+    {
+        "id": "g1_link_out_6",
+        "type": "link out",
+        "z": "85619254656ffc76",
+        "name": "→ state Alambron",
+        "mode": "link",
+        "links": [
+            "g1_link_in_state"
+        ],
+        "x": 500,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "g1_link_in_state",
+        "type": "link in",
+        "z": "85619254656ffc76",
+        "name": "Entradas de Estados PGM",
+        "links": [
+            "g1_link_out_0",
+            "g1_link_out_1",
+            "g1_link_out_2",
+            "g1_link_out_3",
+            "g1_link_out_4",
+            "g1_link_out_5",
+            "g1_link_out_6"
+        ],
+        "x": 80,
+        "y": 1200,
+        "wires": [
+            [
+                "g1_fn_payload_state"
+            ]
+        ]
+    },
+    {
+        "id": "g1_fn_payload_state",
+        "type": "function",
+        "z": "85619254656ffc76",
+        "name": "Preparar payload Estado MQTT",
+        "func": "const active = (msg.payload === 1 || msg.payload === \"1\" || msg.payload === true);\nmsg.topic   = msg.gpioTopic;\nmsg.retain  = false;\nmsg.qos     = 1;\nmsg.payload = JSON.stringify({\n    topic:       msg.gpioTopic,\n    active,\n    value:       active ? 1 : 0,\n    description: msg.gpioDesc,\n    origin:      'g1-rpi-controller',\n    timestamp:   new Date().toISOString()\n});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 1200,
+        "wires": [
+            [
+                "g1_mqtt_out_state",
+                "g1_dbg_state"
+            ]
+        ]
+    },
+    {
+        "id": "g1_mqtt_out_state",
+        "type": "mqtt out",
+        "z": "85619254656ffc76",
+        "name": "Publicar Estado → Mosquitto",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "broker": "mqttcfg_g1",
+        "x": 520,
+        "y": 1180,
+        "wires": []
+    },
+    {
+        "id": "g1_dbg_state",
+        "type": "debug",
+        "z": "85619254656ffc76",
+        "name": "Debug Publicacion Estados",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "topic",
+        "targetType": "msg",
+        "x": 520,
+        "y": 1240,
+        "wires": []
+    }
+]

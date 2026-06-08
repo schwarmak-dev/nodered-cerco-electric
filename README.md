@@ -42,29 +42,23 @@
 
 ## Flujos incluidos
 
-### 1. Persistencia BD (`brokerabierto.json`)
-Escucha todos los mensajes `ElectricFence/#` y los guarda automáticamente en la tabla `registro` de MySQL.
+### 1. BROKER (`brokernuevo.json`)
+Raspberry BROKER (emisor .104): recibe señales físicas de cercos via GPIO, publica MQTT y muestra dashboard.
+- **Tab BROKER**: Suscribe a `inchalam/cercos/alarma/#` e `inchalam/cercos/estado/#`, activa GPIOs de salida (módulo relé 1 y 2).
+- **Tab ALARMAS**: Dashboard UI con LEDs de alarma y estado por zona.
+- **Tab CONTROL CERCOS**: Publica comandos ON/OFF hacia G1.
 
-Imagen de Broker o persistencia de BD
-<img width="837" height="350" alt="{CD2DC5AB-810A-4094-A941-8D8F040AA0D1}" src="https://github.com/user-attachments/assets/372e51ea-6ecf-4c5d-bb30-dae477e07cb9" />
+### 2. G1 (`g1.json`)
+Raspberry G1 (receptor .106): control ON/OFF de cercos via relé GPIO.
+- **Canal C1**: GPIO24 (Relé 1) — arma/desarma TODOS los cercos. Escucha `inchalam/cercos/onoff/#`.
+- **Canal C2**: GPIO25 (Relé 2) — arma/desarma solo Alambron. Escucha `inchalam/cercos/onoff/alambron/#`.
+- **Canal C3**: GPIO24 — activa al recibir CUALQUIER alarma de cerco (`inchalam/cercos/alarma/#`).
+- **Estados PGM**: Lee 7 GPIO de entrada (GPIO23,22,12,20,19,4,21) y publica estados de cercos por MQTT.
 
-
-### 2. Emisor (`emisorabierto.json`)
-Simulador por botones para activar/desactivar alarmas, estados y controles de cada zona del cerco. Incluye mapeo completo de rutas (R1, R2, R3, Switch) publicado como JSON enriquecido.
-
-<img width="851" height="497" alt="{BE2C5204-63E3-401F-AA4B-B24F190F94AD}" src="https://github.com/user-attachments/assets/c81adb97-1f0a-486d-9660-34450fe3a559" />
-
-
-
-### 3. Receptor (`receptorabierto.json`)
-Resuelve los mensajes MQTT por dispositivo destino (Broker, Switch, R1-R4) y actualiza un dashboard profesional con:
-
-- Indicador de sistema armado/desarmado
-- Luces por zona: Estado (verde), Alarma (rojo), Control (azul)
-- Contadores y último evento
-- Botones Armar / Desalarmar
-  
-<img width="800" height="497" alt="{8802214F-62F2-4B8C-8CAB-5D760BFDB100}" src="https://github.com/user-attachments/assets/ed31dab7-43ce-4e49-a23e-6865fe065c99" />
+### 3. REPEATER (`repeater_fixed.json`)
+Raspberry REPEATER (brokerm .105): repetidor de alarmas.
+- Lee 7 GPIO de entrada (hebras de cerco) y publica a `inchalam/cercos/alarma/...`.
+- Mapeo: IN1=GPIO17 (Puelche sup), IN2=GPIO18 (Puelche inf), IN3=GPIO10 (Estac. sup), IN4=GPIO9 (Estac. inf), IN5=GPIO11 (Desp. sup), IN6=GPIO22 (Desp. inf), IN7=GPIO27 (Alambron).
 
 ## Requisitos
 
@@ -116,9 +110,9 @@ nodered-cerco-electric/
 ├── docker/
 │   └── entrypoint.sh        # Script de entrada (combina flujos)
 ├── flows/
-│   ├── brokerabierto.json   # Persistencia en MySQL
-│   ├── emisorabierto.json   # Simulador de señales
-│   └── receptorabierto.json # Dashboard y resolución
+│   ├── brokernuevo.json     # BROKER — alarmas, estados GPIO, dashboard
+│   ├── g1.json              # G1 — control ON/OFF cercos via relé
+│   └── repeater_fixed.json  # REPEATER — repetidor de alarmas GPIO
 ├── mosquitto/
 │   └── config/
 │       └── mosquitto.conf   # Configuración MQTT
@@ -140,18 +134,65 @@ El dashboard (Node-RED UI) en `http://localhost:1880/ui` ofrece:
 
 ## GPIO en Raspberry Pi
 
-Si se ejecuta en una **Raspberry Pi**, se puede habilitar el tab **ElectricFence Emisor GPIO**:
+El sistema está diseñado para ejecutarse en **3 Raspberry Pi** conectadas vía MQTT:
 
-1. En `flows/emisorabierto.json`, cambiar `"disabled": true` a `"disabled": false` en el tab `224ec496b36f6d5e`
-2. Agregar al `docker-compose.yml` en el servicio `node-red`:
+| Dispositivo | IP | Función |
+|-------------|-----|---------|
+| BROKER (.104) | 192.168.1.104 | Recibe señales físicas, publica MQTT, dashboard |
+| REPEATER (.105) | 192.168.1.105 | Repetidor de alarmas MQTT |
+| G1 (.106) | 192.168.1.106 | Control ON/OFF de cercos via relé |
 
-```yaml
-    privileged: true
-    devices:
-      - /dev/gpiomem:/dev/gpiomem
-```
+### Mapeo de GPIO
 
-> En Windows o sin GPIO, usar el simulador por botones (tab ElectricFence Emisor).
+**REPEATER (entrada — alarmas):**
+
+| Entrada | GPIO | Zona |
+|---------|------|------|
+| IN1 | GPIO17 | Puelche superior |
+| IN2 | GPIO18 | Puelche inferior |
+| IN3 | GPIO10 | Estacionamiento superior |
+| IN4 | GPIO9 | Estacionamiento inferior |
+| IN5 | GPIO11 | Despacho superior |
+| IN6 | GPIO22 | Despacho inferior |
+| IN7 | GPIO27 | Alambron |
+
+**BROKER (salida — alarmas y estados):**
+
+| Salida | GPIO | Función |
+|--------|------|---------|
+| Relé 1 IN1 | GPIO17 | Alarma Puelche superior |
+| Relé 1 IN2 | GPIO18 | Alarma Puelche inferior |
+| Relé 1 IN3 | GPIO10 | Alarma Estacionamiento superior |
+| Relé 1 IN4 | GPIO9 | Alarma Estacionamiento inferior |
+| Relé 1 IN5 | GPIO11 | Alarma Despacho superior |
+| Relé 1 IN6 | GPIO8 | Alarma Despacho inferior |
+| Relé 1 IN7 | GPIO7 | Alarma Alambron |
+| Relé 2 IN1 | GPIO23 | Estado Puelche superior |
+| Relé 2 IN2 | GPIO22 | Estado Puelche inferior |
+| Relé 2 IN3 | GPIO12 | Estado Estacionamiento superior |
+| Relé 2 IN4 | GPIO20 | Estado Estacionamiento inferior |
+| Relé 2 IN5 | GPIO19 | Estado Despacho superior |
+| Relé 2 IN6 | GPIO4 | Estado Despacho inferior |
+| Relé 2 IN7 | GPIO21 | Estado Alambron |
+
+**G1 (salida — control de cercos):**
+
+| Salida | GPIO | Función |
+|--------|------|---------|
+| Relé 1 | GPIO24 | Arma/desarma TODOS los cercos |
+| Relé 2 | GPIO25 | Arma/desarma solo Alambron |
+
+**G1 (entrada — estados PGM):**
+
+| Entrada | GPIO | Zona |
+|---------|------|------|
+| IN_STATE | GPIO23 | Puelche superior |
+| IN_STATE | GPIO22 | Puelche inferior |
+| IN_STATE | GPIO12 | Estacionamiento superior |
+| IN_STATE | GPIO20 | Estacionamiento inferior |
+| IN_STATE | GPIO19 | Despacho superior |
+| IN_STATE | GPIO4 | Despacho inferior |
+| IN_STATE | GPIO21 | Alambron |
 
 ## Personalización
 

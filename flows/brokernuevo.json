@@ -1,0 +1,2360 @@
+[
+    {
+        "id": "4ab4070f3a1040ec",
+        "type": "tab",
+        "label": "BROKER",
+        "disabled": false,
+        "info": "Raspberry BROKER (emisorm .104)\nFunción: recibir señales físicas de cercos, publicar MQTT, mostrar dashboard.\nNO controla cercos. NO arma ni desarma.\nMódulo relé 1 — ALARMAS: IN1-7 → GPIO17,18,10,9,11,8,7\nMódulo relé 2 — ESTADOS: IN1-7 → GPIO23,22,12,20,19,4,21\nintype: down — activa con 3.3V, reposo en GND."
+    },
+    {
+        "id": "50dc2693c373286a",
+        "type": "tab",
+        "label": "ALARMAS",
+        "disabled": false,
+        "info": "Dashboard UI — LEDs de alarma y estado de cercos."
+    },
+    {
+        "id": "tab_control_onoff",
+        "type": "tab",
+        "label": "CONTROL CERCOS",
+        "disabled": false,
+        "info": "Publica comandos ON/OFF desde BROKER (.104) hacia G1 (.106).\nTopics: inchalam/cercos/onoff/# e inchalam/cercos/onoff/alambron/#\nUsa el mismo mqtt-broker config que ya existe en BROKER (mqttcfg_alarmas)."
+    },
+    {
+        "id": "c7580a1775459bdc",
+        "type": "ui_tab",
+        "name": "Inchalam — Cercos",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "9e010a303d8adedc",
+        "type": "ui_group",
+        "name": "Cerco Alarma",
+        "tab": "c7580a1775459bdc",
+        "order": 1,
+        "disp": true,
+        "width": "14",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "91ad055f7090d02e",
+        "type": "ui_group",
+        "name": "Cerco Estado",
+        "tab": "c7580a1775459bdc",
+        "order": 2,
+        "disp": true,
+        "width": "14",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "761175d7d76355c8",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "mqttcfg_alarmas",
+        "type": "mqtt-broker",
+        "name": "Mosquitto Inchalam",
+        "broker": "192.168.1.105",
+        "port": "1883",
+        "clientid": "broker-rpi-subscriber",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "57734a5b19454884",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6",
+            "node-red-node-pi-gpio": "2.0.7",
+            "node-red-contrib-ui-led": "0.4.11"
+        }
+    },
+    {
+        "id": "cmt_alarmas_header",
+        "type": "comment",
+        "z": "4ab4070f3a1040ec",
+        "name": "── ALARMAS: suscribe inchalam/cercos/alarma/# → GPIO17,18,10,9,11,8,7 ──",
+        "info": "active:true → GPIO HIGH | active:false → GPIO LOW",
+        "x": 220,
+        "y": 50,
+        "wires": []
+    },
+    {
+        "id": "cmt_estados_header",
+        "type": "comment",
+        "z": "4ab4070f3a1040ec",
+        "name": "── ESTADOS: suscribe inchalam/cercos/estado/# → GPIO23,22,12,20,19,4,21 ──",
+        "info": "active:true → GPIO HIGH | active:false → GPIO LOW",
+        "x": 220,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_alarma_0",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Alarma cerco Puelche superior",
+        "topic": "inchalam/cercos/alarma/puelche/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 100,
+        "wires": [
+            [
+                "br_fn_alarma_0"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_alarma_0",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO17 Alarma cerco Puelche superior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 100,
+        "wires": [
+            [
+                "br_gpio_alarma_0",
+                "br_dbg_alarma_0"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_alarma_0",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO17 — Alarma cerco Puelche superior",
+        "pin": "17",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 640,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_alarma_0",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg puelche superior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 135,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_alarma_1",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Alarma cerco Puelche inferior",
+        "topic": "inchalam/cercos/alarma/puelche/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 160,
+        "wires": [
+            [
+                "br_fn_alarma_1"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_alarma_1",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO18 Alarma cerco Puelche inferior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 160,
+        "wires": [
+            [
+                "br_gpio_alarma_1",
+                "br_dbg_alarma_1"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_alarma_1",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO18 — Alarma cerco Puelche inferior",
+        "pin": "18",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 145,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_alarma_1",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg puelche inferior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 195,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_alarma_2",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Alarma cerco Estacionamiento superior",
+        "topic": "inchalam/cercos/alarma/estacionamiento/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 220,
+        "wires": [
+            [
+                "br_fn_alarma_2"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_alarma_2",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO10 Alarma cerco Estacionamiento superior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 220,
+        "wires": [
+            [
+                "br_gpio_alarma_2",
+                "br_dbg_alarma_2"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_alarma_2",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO10 — Alarma cerco Estacionamiento superior",
+        "pin": "10",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 205,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_alarma_2",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg estacionamiento superior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 255,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_alarma_3",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Alarma cerco Estacionamiento inferior",
+        "topic": "inchalam/cercos/alarma/estacionamiento/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 280,
+        "wires": [
+            [
+                "br_fn_alarma_3"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_alarma_3",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO9 Alarma cerco Estacionamiento inferior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 280,
+        "wires": [
+            [
+                "br_gpio_alarma_3",
+                "br_dbg_alarma_3"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_alarma_3",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO9 — Alarma cerco Estacionamiento inferior",
+        "pin": "9",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 265,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_alarma_3",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg estacionamiento inferior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 315,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_alarma_4",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Alarma cerco Despacho superior",
+        "topic": "inchalam/cercos/alarma/despacho/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 340,
+        "wires": [
+            [
+                "br_fn_alarma_4"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_alarma_4",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO11 Alarma cerco Despacho superior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 340,
+        "wires": [
+            [
+                "br_gpio_alarma_4",
+                "br_dbg_alarma_4"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_alarma_4",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO11 — Alarma cerco Despacho superior",
+        "pin": "11",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 325,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_alarma_4",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg despacho superior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 375,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_alarma_5",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Alarma cerco Despacho inferior",
+        "topic": "inchalam/cercos/alarma/despacho/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 400,
+        "wires": [
+            [
+                "br_fn_alarma_5"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_alarma_5",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO8 Alarma cerco Despacho inferior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 400,
+        "wires": [
+            [
+                "br_gpio_alarma_5",
+                "br_dbg_alarma_5"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_alarma_5",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO8 — Alarma cerco Despacho inferior",
+        "pin": "8",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 385,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_alarma_5",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg despacho inferior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 435,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_alarma_6",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Alarma cerco Alambron",
+        "topic": "inchalam/cercos/alarma/alambron/unico",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 460,
+        "wires": [
+            [
+                "br_fn_alarma_6"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_alarma_6",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO7 Alarma cerco Alambron",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 460,
+        "wires": [
+            [
+                "br_gpio_alarma_6",
+                "br_dbg_alarma_6"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_alarma_6",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO7 — Alarma cerco Alambron",
+        "pin": "7",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 445,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_alarma_6",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg alambron unico",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 495,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_estado_7",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Estado cerco Puelche superior",
+        "topic": "inchalam/cercos/estado/puelche/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 620,
+        "wires": [
+            [
+                "br_fn_estado_7"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_estado_7",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO23 Estado cerco Puelche superior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 620,
+        "wires": [
+            [
+                "br_gpio_estado_7",
+                "br_dbg_estado_7"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_estado_7",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO23 — Estado cerco Puelche superior",
+        "pin": "23",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 605,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_estado_7",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg puelche superior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 655,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_estado_8",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Estado cerco Puelche inferior",
+        "topic": "inchalam/cercos/estado/puelche/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 680,
+        "wires": [
+            [
+                "br_fn_estado_8"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_estado_8",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO22 Estado cerco Puelche inferior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 680,
+        "wires": [
+            [
+                "br_gpio_estado_8",
+                "br_dbg_estado_8"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_estado_8",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO22 — Estado cerco Puelche inferior",
+        "pin": "22",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 665,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_estado_8",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg puelche inferior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 715,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_estado_9",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Estado cerco Estacionamiento superior",
+        "topic": "inchalam/cercos/estado/estacionamiento/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 740,
+        "wires": [
+            [
+                "br_fn_estado_9"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_estado_9",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO12 Estado cerco Estacionamiento superior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 740,
+        "wires": [
+            [
+                "br_gpio_estado_9",
+                "br_dbg_estado_9"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_estado_9",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO12 — Estado cerco Estacionamiento superior",
+        "pin": "12",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 725,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_estado_9",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg estacionamiento superior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 775,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_estado_10",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Estado cerco Estacionamiento inferior",
+        "topic": "inchalam/cercos/estado/estacionamiento/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 800,
+        "wires": [
+            [
+                "br_fn_estado_10"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_estado_10",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO20 Estado cerco Estacionamiento inferior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 800,
+        "wires": [
+            [
+                "br_gpio_estado_10",
+                "br_dbg_estado_10"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_estado_10",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO20 — Estado cerco Estacionamiento inferior",
+        "pin": "20",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 785,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_estado_10",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg estacionamiento inferior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 835,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_estado_11",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Estado cerco Despacho superior",
+        "topic": "inchalam/cercos/estado/despacho/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 860,
+        "wires": [
+            [
+                "br_fn_estado_11"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_estado_11",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO19 Estado cerco Despacho superior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 860,
+        "wires": [
+            [
+                "br_gpio_estado_11",
+                "br_dbg_estado_11"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_estado_11",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO19 — Estado cerco Despacho superior",
+        "pin": "19",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 845,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_estado_11",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg despacho superior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 895,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_estado_12",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Estado cerco Despacho inferior",
+        "topic": "inchalam/cercos/estado/despacho/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 920,
+        "wires": [
+            [
+                "br_fn_estado_12"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_estado_12",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO4 Estado cerco Despacho inferior",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 920,
+        "wires": [
+            [
+                "br_gpio_estado_12",
+                "br_dbg_estado_12"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_estado_12",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO4 — Estado cerco Despacho inferior",
+        "pin": "4",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 905,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_estado_12",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg despacho inferior",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 955,
+        "wires": []
+    },
+    {
+        "id": "br_mqttin_estado_13",
+        "type": "mqtt in",
+        "z": "4ab4070f3a1040ec",
+        "name": "Sub Estado cerco Alambron",
+        "topic": "inchalam/cercos/estado/alambron/unico",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 120,
+        "y": 980,
+        "wires": [
+            [
+                "br_fn_estado_13"
+            ]
+        ]
+    },
+    {
+        "id": "br_fn_estado_13",
+        "type": "function",
+        "z": "4ab4070f3a1040ec",
+        "name": "→ GPIO21 Estado cerco Alambron",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? (p.active ? 1 : 0) : (p === 1 || p === true ? 1 : 0);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 980,
+        "wires": [
+            [
+                "br_gpio_estado_13",
+                "br_dbg_estado_13"
+            ]
+        ]
+    },
+    {
+        "id": "br_gpio_estado_13",
+        "type": "rpi-gpio out",
+        "z": "4ab4070f3a1040ec",
+        "name": "GPIO21 — Estado cerco Alambron",
+        "pin": "21",
+        "set": true,
+        "level": "0",
+        "freq": "",
+        "out": "out",
+        "bcm": true,
+        "x": 620,
+        "y": 965,
+        "wires": []
+    },
+    {
+        "id": "br_dbg_estado_13",
+        "type": "debug",
+        "z": "4ab4070f3a1040ec",
+        "name": "Dbg alambron unico",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 630,
+        "y": 1015,
+        "wires": []
+    },
+    {
+        "id": "819928483a021d72",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Alarma Puelche Superior",
+        "topic": "inchalam/cercos/alarma/puelche/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 80,
+        "wires": [
+            [
+                "ffa8b839457b3b64"
+            ]
+        ]
+    },
+    {
+        "id": "ffa8b839457b3b64",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 80,
+        "wires": [
+            [
+                "9a1bd4084bd8f104"
+            ]
+        ]
+    },
+    {
+        "id": "9a1bd4084bd8f104",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 1,
+        "group": "9e010a303d8adedc",
+        "width": "3",
+        "height": "1",
+        "label": "Alarma Puelche Superior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Alarma Puelche Superior",
+        "x": 600,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "4fb84871efad144f",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Alarma Puelche Inferior",
+        "topic": "inchalam/cercos/alarma/puelche/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 140,
+        "wires": [
+            [
+                "fba1c00a155994e6"
+            ]
+        ]
+    },
+    {
+        "id": "fba1c00a155994e6",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 140,
+        "wires": [
+            [
+                "137c583ef72a91de"
+            ]
+        ]
+    },
+    {
+        "id": "137c583ef72a91de",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 2,
+        "group": "9e010a303d8adedc",
+        "width": "3",
+        "height": "1",
+        "label": "Alarma Puelche Inferior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Alarma Puelche Inferior",
+        "x": 600,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "9d4981d811f7ea9e",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Alarma Estacionamiento Superior",
+        "topic": "inchalam/cercos/alarma/estacionamiento/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 200,
+        "wires": [
+            [
+                "3776b36a54637271"
+            ]
+        ]
+    },
+    {
+        "id": "3776b36a54637271",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 200,
+        "wires": [
+            [
+                "8114841e1c300d6e"
+            ]
+        ]
+    },
+    {
+        "id": "8114841e1c300d6e",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 3,
+        "group": "9e010a303d8adedc",
+        "width": "3",
+        "height": "1",
+        "label": "Alarma Estacionamiento Superior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Alarma Estacionamiento Superior",
+        "x": 600,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "1973c15c709d7432",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Alarma Estacionamiento Inferior",
+        "topic": "inchalam/cercos/alarma/estacionamiento/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 260,
+        "wires": [
+            [
+                "9ac34b33fafa634b"
+            ]
+        ]
+    },
+    {
+        "id": "9ac34b33fafa634b",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 260,
+        "wires": [
+            [
+                "3795abe4fc112974"
+            ]
+        ]
+    },
+    {
+        "id": "3795abe4fc112974",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 4,
+        "group": "9e010a303d8adedc",
+        "width": "3",
+        "height": "1",
+        "label": "Alarma Estacionamiento Inferior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Alarma Estacionamiento Inferior",
+        "x": 600,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "d82d4eec999f67c3",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Alarma Despacho Superior",
+        "topic": "inchalam/cercos/alarma/despacho/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 320,
+        "wires": [
+            [
+                "6522489ddf702402"
+            ]
+        ]
+    },
+    {
+        "id": "6522489ddf702402",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 320,
+        "wires": [
+            [
+                "ddc05adf12d66950"
+            ]
+        ]
+    },
+    {
+        "id": "ddc05adf12d66950",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 5,
+        "group": "9e010a303d8adedc",
+        "width": "3",
+        "height": "1",
+        "label": "Alarma Despacho Superior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Alarma Despacho Superior",
+        "x": 600,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "c550ddf92affdba8",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Alarma Despacho Inferior",
+        "topic": "inchalam/cercos/alarma/despacho/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 380,
+        "wires": [
+            [
+                "2ef840cbc02a1c87"
+            ]
+        ]
+    },
+    {
+        "id": "2ef840cbc02a1c87",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 380,
+        "wires": [
+            [
+                "80b186886e8ae195"
+            ]
+        ]
+    },
+    {
+        "id": "80b186886e8ae195",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 6,
+        "group": "9e010a303d8adedc",
+        "width": "3",
+        "height": "1",
+        "label": "Alarma Despacho Inferior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Alarma Despacho Inferior",
+        "x": 600,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "9ab1dee6ce2cdabd",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Alarma Alambron",
+        "topic": "inchalam/cercos/alarma/alambron/unico",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 440,
+        "wires": [
+            [
+                "5798b6b6d5d71d60"
+            ]
+        ]
+    },
+    {
+        "id": "5798b6b6d5d71d60",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 440,
+        "wires": [
+            [
+                "2d13342fb5e7a0e5"
+            ]
+        ]
+    },
+    {
+        "id": "2d13342fb5e7a0e5",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 7,
+        "group": "9e010a303d8adedc",
+        "width": "3",
+        "height": "1",
+        "label": "Alarma Alambron",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Alarma Alambron",
+        "x": 600,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "dc071e6b9bf30b0f",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Estado Puelche Superior",
+        "topic": "inchalam/cercos/estado/puelche/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 560,
+        "wires": [
+            [
+                "e321712808707ae1"
+            ]
+        ]
+    },
+    {
+        "id": "e321712808707ae1",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 560,
+        "wires": [
+            [
+                "a061c702846e5b73"
+            ]
+        ]
+    },
+    {
+        "id": "a061c702846e5b73",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 1,
+        "group": "91ad055f7090d02e",
+        "width": "3",
+        "height": "1",
+        "label": "Estado Puelche Superior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Estado Puelche Superior",
+        "x": 600,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "fb87ee454fbc55d0",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Estado Puelche Inferior",
+        "topic": "inchalam/cercos/estado/puelche/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 620,
+        "wires": [
+            [
+                "b3ab2d569da34fe6"
+            ]
+        ]
+    },
+    {
+        "id": "b3ab2d569da34fe6",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 620,
+        "wires": [
+            [
+                "869e7abcd77acb1e"
+            ]
+        ]
+    },
+    {
+        "id": "869e7abcd77acb1e",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 2,
+        "group": "91ad055f7090d02e",
+        "width": "3",
+        "height": "1",
+        "label": "Estado Puelche Inferior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Estado Puelche Inferior",
+        "x": 600,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "bf7624a9182d2b08",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Estado Estacionamiento Superior",
+        "topic": "inchalam/cercos/estado/estacionamiento/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 680,
+        "wires": [
+            [
+                "1bd9e26b13d3f695"
+            ]
+        ]
+    },
+    {
+        "id": "1bd9e26b13d3f695",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 680,
+        "wires": [
+            [
+                "0c7cfa9b87518725"
+            ]
+        ]
+    },
+    {
+        "id": "0c7cfa9b87518725",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 3,
+        "group": "91ad055f7090d02e",
+        "width": "3",
+        "height": "1",
+        "label": "Estado Estacionamiento Superior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Estado Estacionamiento Superior",
+        "x": 600,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "3cd78f39ee2f2226",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Estado Estacionamiento Inferior",
+        "topic": "inchalam/cercos/estado/estacionamiento/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 740,
+        "wires": [
+            [
+                "6465cf3b69eebd49"
+            ]
+        ]
+    },
+    {
+        "id": "6465cf3b69eebd49",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 740,
+        "wires": [
+            [
+                "35734b7523815c69"
+            ]
+        ]
+    },
+    {
+        "id": "35734b7523815c69",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 4,
+        "group": "91ad055f7090d02e",
+        "width": "3",
+        "height": "1",
+        "label": "Estado Estacionamiento Inferior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Estado Estacionamiento Inferior",
+        "x": 600,
+        "y": 740,
+        "wires": []
+    },
+    {
+        "id": "abf4f1ba425fa320",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Estado Despacho Superior",
+        "topic": "inchalam/cercos/estado/despacho/superior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 800,
+        "wires": [
+            [
+                "8ff20c9a4d3dd295"
+            ]
+        ]
+    },
+    {
+        "id": "8ff20c9a4d3dd295",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 800,
+        "wires": [
+            [
+                "c0b3c1d9bfaef9f5"
+            ]
+        ]
+    },
+    {
+        "id": "c0b3c1d9bfaef9f5",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 5,
+        "group": "91ad055f7090d02e",
+        "width": "3",
+        "height": "1",
+        "label": "Estado Despacho Superior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Estado Despacho Superior",
+        "x": 600,
+        "y": 800,
+        "wires": []
+    },
+    {
+        "id": "1253ca9de369881f",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Estado Despacho Inferior",
+        "topic": "inchalam/cercos/estado/despacho/inferior",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 860,
+        "wires": [
+            [
+                "1ab611aec89b8f47"
+            ]
+        ]
+    },
+    {
+        "id": "1ab611aec89b8f47",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 860,
+        "wires": [
+            [
+                "9f3206d824e91649"
+            ]
+        ]
+    },
+    {
+        "id": "9f3206d824e91649",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 6,
+        "group": "91ad055f7090d02e",
+        "width": "3",
+        "height": "1",
+        "label": "Estado Despacho Inferior",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Estado Despacho Inferior",
+        "x": 600,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "9c9a02c8c41525ec",
+        "type": "mqtt in",
+        "z": "50dc2693c373286a",
+        "name": "Sub Estado Alambron",
+        "topic": "inchalam/cercos/estado/alambron/unico",
+        "qos": "1",
+        "datatype": "auto-detect",
+        "broker": "mqttcfg_alarmas",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 920,
+        "wires": [
+            [
+                "3abc07ef6da0c5ce"
+            ]
+        ]
+    },
+    {
+        "id": "3abc07ef6da0c5ce",
+        "type": "function",
+        "z": "50dc2693c373286a",
+        "name": "",
+        "func": "let p = msg.payload;\nif (typeof p === 'string') { try { p = JSON.parse(p); } catch(e){} }\nmsg.payload = (p !== null && typeof p === 'object') ? !!p.active : (p === 1 || p === true);\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 920,
+        "wires": [
+            [
+                "fc97828feeedad42"
+            ]
+        ]
+    },
+    {
+        "id": "fc97828feeedad42",
+        "type": "ui_led",
+        "z": "50dc2693c373286a",
+        "order": 7,
+        "group": "91ad055f7090d02e",
+        "width": "3",
+        "height": "1",
+        "label": "Estado Alambron",
+        "colorForValue": [
+            {
+                "color": "#FF0000",
+                "value": "true",
+                "valueType": "bool"
+            },
+            {
+                "color": "#808080",
+                "value": "false",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "name": "Estado Alambron",
+        "x": 600,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "cmt_ctrl_header",
+        "type": "comment",
+        "z": "tab_control_onoff",
+        "name": "── Botones de control → publican a G1 via MQTT ──",
+        "info": "Inject con active:true activa pulso en G1. active:false lo desactiva.",
+        "x": 200,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "inj_todos_on",
+        "type": "inject",
+        "z": "tab_control_onoff",
+        "name": "ARMAR todos los cercos",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0,
+        "topic": "inchalam/cercos/onoff/todos",
+        "payload": "{\"active\":true,\"value\":1,\"origin\":\"broker-rpi-publisher\"}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 120,
+        "wires": [
+            [
+                "fn_ctrl_todos"
+            ]
+        ]
+    },
+    {
+        "id": "inj_todos_off",
+        "type": "inject",
+        "z": "tab_control_onoff",
+        "name": "DESARMAR todos los cercos",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0,
+        "topic": "inchalam/cercos/onoff/todos",
+        "payload": "{\"active\":false,\"value\":0,\"origin\":\"broker-rpi-publisher\"}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 180,
+        "wires": [
+            [
+                "fn_ctrl_todos"
+            ]
+        ]
+    },
+    {
+        "id": "fn_ctrl_todos",
+        "type": "function",
+        "z": "tab_control_onoff",
+        "name": "Armar payload → onoff/todos",
+        "func": "msg.topic = 'inchalam/cercos/onoff/todos';\nmsg.qos = 1;\nmsg.retain = false;\nmsg.payload = JSON.stringify({\n    topic:     msg.topic,\n    active:    msg.payload.active,\n    value:     msg.payload.value,\n    origin:    'broker-rpi-publisher',\n    timestamp: new Date().toISOString()\n});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 150,
+        "wires": [
+            [
+                "mqttout_ctrl",
+                "dbg_ctrl_todos"
+            ]
+        ]
+    },
+    {
+        "id": "dbg_ctrl_todos",
+        "type": "debug",
+        "z": "tab_control_onoff",
+        "name": "Dbg todos",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 640,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "inj_alambron_on",
+        "type": "inject",
+        "z": "tab_control_onoff",
+        "name": "ARMAR Alambron",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0,
+        "topic": "inchalam/cercos/onoff/alambron/unico",
+        "payload": "{\"active\":true,\"value\":1,\"origin\":\"broker-rpi-publisher\"}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 300,
+        "wires": [
+            [
+                "fn_ctrl_alambron"
+            ]
+        ]
+    },
+    {
+        "id": "inj_alambron_off",
+        "type": "inject",
+        "z": "tab_control_onoff",
+        "name": "DESARMAR Alambron",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0,
+        "topic": "inchalam/cercos/onoff/alambron/unico",
+        "payload": "{\"active\":false,\"value\":0,\"origin\":\"broker-rpi-publisher\"}",
+        "payloadType": "json",
+        "x": 160,
+        "y": 360,
+        "wires": [
+            [
+                "fn_ctrl_alambron"
+            ]
+        ]
+    },
+    {
+        "id": "fn_ctrl_alambron",
+        "type": "function",
+        "z": "tab_control_onoff",
+        "name": "Armar payload → onoff/alambron/unico",
+        "func": "msg.topic = 'inchalam/cercos/onoff/alambron/unico';\nmsg.qos = 1;\nmsg.retain = false;\nmsg.payload = JSON.stringify({\n    topic:     msg.topic,\n    active:    msg.payload.active,\n    value:     msg.payload.value,\n    origin:    'broker-rpi-publisher',\n    timestamp: new Date().toISOString()\n});\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 430,
+        "y": 330,
+        "wires": [
+            [
+                "mqttout_ctrl",
+                "dbg_ctrl_alambron"
+            ]
+        ]
+    },
+    {
+        "id": "dbg_ctrl_alambron",
+        "type": "debug",
+        "z": "tab_control_onoff",
+        "name": "Dbg alambron",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": true,
+        "complete": "payload",
+        "targetType": "msg",
+        "x": 640,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "mqttout_ctrl",
+        "type": "mqtt out",
+        "z": "tab_control_onoff",
+        "name": "Publicar → Mosquitto (.105)",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "broker": "mqttcfg_alarmas",
+        "x": 640,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "cmt_nota_diagnostico",
+        "type": "comment",
+        "z": "tab_control_onoff",
+        "name": "⚠ NOTA: usa broker config 'mqttcfg_alarmas' (ya existe en BROKER). Si G1 no responde, verificar en G1: mosquitto_sub -h 192.168.1.105 -t 'inchalam/cercos/onoff/#' -v",
+        "info": "",
+        "x": 350,
+        "y": 460,
+        "wires": []
+    }
+]
