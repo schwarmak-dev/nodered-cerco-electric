@@ -355,7 +355,7 @@ services:
 ### Agregar Nuevas Zonas
 
 1. Editar el flujo correspondiente (BROKER, G1 o REPEATER)
-2. Agregar nodos MQTT con el topic: `inchalam/cercos/alarma/{zona}/{subzona}`
+2. Agregar nodos MQTT con el topic: `chespirito/cercos/alarma/{zona}/{subzona}`
 3. Conectar a GPIO disponible en el módulo relé
 4. Deploy y reiniciar contenedor
 
@@ -375,16 +375,16 @@ services:
 ## 📝 Topics MQTT
 
 ```
-inchalam/cercos/alarma/{zona}/{subzona}     # Alarmas de cerco
-inchalam/cercos/estado/{zona}/{subzona}     # Estados de cerco
-inchalam/cercos/onoff/#                      # Comandos ON/OFF
-inchalam/cercos/onoff/alambron/#             # Control solo Alambron
+chespirito/cercos/alarma/{zona}/{subzona}     # Alarmas de cerco
+chespirito/cercos/estado/{zona}/{subzona}     # Estados de cerco
+chespirito/cercos/onoff/#                      # Comandos ON/OFF
+chespirito/cercos/onoff/alambron/#             # Control solo Alambron
 ```
 
 **Ejemplo de payload:**
 ```json
 {
-  "topic": "inchalam/cercos/alarma/puelche/superior",
+  "topic": "chespirito/cercos/alarma/puelche/superior",
   "active": true,
   "value": 1,
   "description": "Alarma cerco Puelche superior",
